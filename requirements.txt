@@ -1,0 +1,26 @@
+# Core Dependencies
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.24.0
+tqdm>=4.65.0
+psutil>=5.9.0
+
+# Optional: For better performance on specific platforms
+# Install based on your system:
+# - For CUDA: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# - For Apple Silicon: torch with MPS support is included by default
+
+# Video Processing (FFmpeg required separately)
+# Install FFmpeg:
+# - macOS: brew install ffmpeg
+# - Ubuntu: sudo apt-get install ffmpeg
+# - Windows: Download from https://ffmpeg.org/download.html
+
+# Additional utilities
+Pillow>=9.5.0
+PyYAML>=6.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scipy>=1.10.0

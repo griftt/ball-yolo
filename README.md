@@ -43,14 +43,21 @@ ffmpeg  # 视频剪辑必需
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/ball-yolo.git
+git clone https://github.com/griftt/ball-yolo.git
 cd ball-yolo
 
 # 安装 Python 依赖
-pip install ultralytics opencv-python torch numpy tqdm psutil
+pip install -r requirements.txt
 
-# 安装 FFmpeg (Mac)
+# 安装 FFmpeg
+# macOS:
 brew install ffmpeg
+
+# Ubuntu/Debian:
+sudo apt-get install ffmpeg
+
+# Windows:
+# 从 https://ffmpeg.org/download.html 下载并添加到 PATH
 ```
 
 ### 2. 准备模型
@@ -111,6 +118,9 @@ VIDEO_TASKS = [
 
 ```
 ball-yolo/
+├── README.md              # 项目说明文档
+├── requirements.txt       # Python 依赖列表
+├── .gitignore            # Git 忽略配置
 ├── ball_track.py          # 单视频处理（完整版，带轨迹特效）
 ├── best6.0.py             # 批量处理多视频（极速版）
 ├── sync_cut.py            # 实时剪辑版本
