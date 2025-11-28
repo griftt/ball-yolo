@@ -21,6 +21,8 @@
 
 ## 📋 系统要求
 
+> 💡 **想了解完整的工作流程？** 查看 [📖 WORKFLOW.md](WORKFLOW.md) - 从数据采集到生成集锦的详细指南
+
 ### 硬件要求
 - **推荐**：Apple Silicon (M1/M2/M3 系列)
 - **最低**：支持 MPS 的 Mac 或 CUDA GPU
@@ -119,6 +121,7 @@ VIDEO_TASKS = [
 ```
 ball-yolo/
 ├── README.md              # 项目说明文档
+├── WORKFLOW.md           # 📖 完整工作流程指南
 ├── requirements.txt       # Python 依赖列表
 ├── .gitignore            # Git 忽略配置
 ├── ball_track.py          # 单视频处理（完整版，带轨迹特效）
@@ -126,8 +129,8 @@ ball-yolo/
 ├── sync_cut.py            # 实时剪辑版本
 ├── exportml.py            # 模型导出为 CoreML 格式
 ├── datacut.py             # 数据标注工具
-├── best_train_yolo11l.py  # 模型训练脚本
-├── mergevideo.py          # 视频合并工具
+├── best_train_yolo11nv2.py # 模型训练脚本（优化版）
+├── merge_instant.py       # 视频合并工具
 ├── outputs/               # 输出目录
 └── runs/                  # 训练结果
     └── train/
