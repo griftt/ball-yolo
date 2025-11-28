@@ -120,19 +120,37 @@ VIDEO_TASKS = [
 
 ```
 ball-yolo/
-├── README.md              # 项目说明文档
-├── WORKFLOW.md           # 📖 完整工作流程指南
-├── requirements.txt       # Python 依赖列表
-├── .gitignore            # Git 忽略配置
-├── ball_track.py          # 单视频处理（完整版，带轨迹特效）
-├── best6.0.py             # 批量处理多视频（极速版）
-├── sync_cut.py            # 实时剪辑版本
-├── exportml.py            # 模型导出为 CoreML 格式
-├── datacut.py             # 数据标注工具
-├── best_train_yolo11nv2.py # 模型训练脚本（优化版）
-├── merge_instant.py       # 视频合并工具
-├── outputs/               # 输出目录
-└── runs/                  # 训练结果
+├── README.md                   # 📘 项目说明文档
+├── WORKFLOW.md                 # 📖 完整工作流程指南（推荐阅读）
+├── requirements.txt            # Python 依赖列表
+├── .gitignore                  # Git 忽略配置
+│
+├── 🎯 核心检测脚本
+│   ├── ball_track.py           # 单视频处理（完整版，带轨迹特效）
+│   ├── best6.0.py              # 批量处理多视频（极速版，推荐）
+│   ├── best5.0.py              # 批量处理（v5.0）
+│   ├── best4.0.py              # 批量处理（v4.0）
+│   ├── best3.0.py              # 批量处理（v3.0）
+│   ├── best2.0.py              # 批量处理（v2.0）
+│   └── best.py                 # 基础版本
+│
+├── 🧠 模型训练脚本
+│   ├── best_train_yolo11nv2.py # 训练脚本 v2（推荐，优化版）
+│   └── best_train_yolo11l.py   # 训练脚本 v1
+│
+├── 🛠️ 工具脚本
+│   ├── datacut.py              # 数据采集与标注工具
+│   ├── exportml.py             # 模型导出为 CoreML 格式
+│   ├── merge_instant.py        # 视频合并工具（推荐）
+│   └── check.py                # 模型检查工具
+│
+├── 📦 预训练模型（可选）
+│   ├── yolo11n.pt              # YOLO11 Nano 模型
+│   ├── yolo11s.pt              # YOLO11 Small 模型
+│   └── yolo11l.pt              # YOLO11 Large 模型
+│
+├── outputs/                    # 输出目录（剪辑视频）
+└── runs/                       # 训练结果目录
     └── train/
         ├── yolo11_finetune_new_court/
         ├── yolo11sbest/
@@ -141,13 +159,15 @@ ball-yolo/
 
 ## 🎯 核心脚本说明
 
-### ball_track.py - 完整版检测器
+### 🏆 推荐使用
+
+#### 1、ball_track.py - 单视频完整版（带轨迵特效）
 **适用场景**：需要高质量轨迹特效的单视频处理
 
 **特点**：
 - ✅ 智能轨迹清洗算法（去除运球、反弹等干扰）
 - ✅ 平滑轨迹渲染（完美抛物线）
-- ✅ 自动篮筐校准
+- ✅ 自动篮框校准
 - ✅ 区域判定逻辑（高位区、触框区、进球区）
 
 **配置参数**：
@@ -160,7 +180,7 @@ CONF_THRES_BALL = 0.15          # 篮球检测置信度
 INFERENCE_SIZE = 1024           # 推理分辨率
 ```
 
-### best6.0.py - 批量处理器
+#### 2、best6.0.py - 批量处理器（极速版，推荐）
 **适用场景**：批量处理多个视频，追求速度
 
 **特点**：
@@ -174,15 +194,54 @@ INFERENCE_SIZE = 1024           # 推理分辨率
 FRAME_SKIP = 3              # 每3帧检测一次
 MAX_PROCESS_MINUTES = 30    # 每个视频最多处理时长
 ROTATE_VIDEO_180 = False    # 是否旋转180度
+
+VIDEO_TASKS = [
+    {"path": "/path/to/video1.mp4", "start": 25.25},
+    {"path": "/path/to/video2.mp4", "start": 27.97},
+]
 ```
 
-### sync_cut.py - 实时剪辑版
-**适用场景**：已知篮筐坐标，直接处理
+### 📚 历史版本（了解即可）
 
-**特点**：
-- ✅ 使用固定篮筐坐标（跳过校准）
-- ✅ 状态机进球判定
-- ✅ 后台异步剪辑
+- **best5.0.py**：批量处理 v5，添加了散热保护
+- **best4.0.py**：批量处理 v4，优化了内存管理
+- **best3.0.py**：批量处理 v3，添加了跳帧功能
+- **best2.0.py**：批量处理 v2，多线程剪辑
+- **best.py**：基础版本，单视频检测
+
+### 🛠️ 工具脚本
+
+#### datacut.py - 数据采集与标注工具
+交互式的数据标注工具，用于从视频中截取训练数据。
+
+**操作说明**：
+- `空格`：暂停/播放
+- `S`：保存当前帧
+- `A/D`：逐帧前进/后退
+- `拖动滑块`：快速定位
+- `Q`：退出程序
+
+#### exportml.py - CoreML 模型导出
+将训练好的 PyTorch 模型导出为 CoreML 格式，利用 Apple Neural Engine 加速。
+
+```python
+model = YOLO("./runs/train/yolo11n_640_train/weights/best.pt")
+model.export(format="coreml", imgsz=1024, nms=True, half=True)
+```
+
+#### merge_instant.py - 视频合并工具
+将所有剪辑片段合并为一个完整的集锦视频。
+
+**配置示例**：
+```python
+INPUT_FOLDERS = [
+    "./outputs/auto_mps_clips_batch_final",
+]
+OUTPUT_FILE = "./outputs/highlight_collection.mp4"
+```
+
+#### check.py - 模型检查工具
+验证模型文件完整性和基本信息。
 
 ## 🧪 模型训练
 
@@ -201,25 +260,39 @@ python datacut.py
 
 ### 2. 训练模型
 
+#### 使用 best_train_yolo11nv2.py（推荐）
+
+优化的训练脚本，专门适配 Mac M3 Pro 硬件。
+
 ```bash
-# 编辑 best_train_yolo11l.py 配置数据集路径
+python best_train_yolo11nv2.py
+```
+
+**配置参数**：
+```python
+DATASET_DIR = "/Users/grifftwu/Desktop/历史篮球/1126/"
+MODEL_NAME = "yolo11n.pt"  # Nano 模型（速度快）
+# MODEL_NAME = "yolo11s.pt"  # Small 模型（推荐，性价比高）
+
+epochs = 50          # 训练轮数
+imgsz = 640          # 图片分辨率
+batch = 8            # 批次大小
+device = "mps"       # 使用 Apple MPS 加速
+```
+
+**核心优化**：
+- `mosaic=1.0`：马赛克增强（对小目标检测重要）
+- `close_mosaic=10`：最后 10 轮关闭马赛克（精细化微调）
+- `workers=4`：M3 Pro 可用 4 个线程加载数据
+- `cache=True`：18GB 内存可开启，速度更快
+
+#### 使用 best_train_yolo11l.py
+
+基础训练脚本，适用于 Large 模型。
+
+```bash
 python best_train_yolo11l.py
 ```
-
-**训练配置**：
-```python
-DATASET_DIR = "/path/to/your/dataset"
-MODEL_NAME = "yolo11s.pt"  # 基础模型
-epochs = 50
-imgsz = 1024               # 高清训练
-batch = 4                  # 批次大小
-device = "mps"             # 使用 MPS 加速
-```
-
-**优化技巧**：
-- 关闭 mosaic 增强（`mosaic=0.0`）避免小球被过度变形
-- 降低 scale 参数（`scale=0.1`）保持球的尺寸稳定
-- 使用 `workers=0` 避免 Mac 多线程日志卡死
 
 ### 3. 导出 CoreML 模型
 
