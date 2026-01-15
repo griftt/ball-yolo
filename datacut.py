@@ -1,9 +1,15 @@
 import cv2
 import os
+import glob
 
 # ==================== 配置区域 ====================
+# 单视频模式
 VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/1112/1112.mov" 
 OUTPUT_DIR = "/Users/grifftwu/Desktop/历史篮球/1112/manual_dataset"
+
+# 多视频模式（新增）
+VIDEO_FOLDER = "/Users/grifftwu/Desktop/历史篮球/1126"  # 包含多个视频的文件夹
+MULTI_OUTPUT_DIR = "/Users/grifftwu/Desktop/历史篮球/1126/multi_dataset"  # 多视频截图输出目录
 # ================================================
 
 # 全局变量，用于回调函数

@@ -5,15 +5,20 @@ import numpy as np
 from ultralytics import YOLO
 
 # ==================== ⚙️ 调试配置 (修改这里) ====================
-VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/1126/111.mp4"
-MODEL_PATH = "./runs/train/yolo11n_640_train/weights/best.pt"
+# VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/1122/check.mp4"
+# MODEL_PATH = "./runs/train/yolo11n_640_train/weights/best.pt"
+# MODEL_PATH = "runs/detect/runs/train/yolo11n_640_train_hd/weights/best.pt"
+# MODEL_PATH = "/Users/grifftwu/IdeaProjects/ball-yolo/runs/train/yolo11n_640_train_hd/weights/best.pt"
+MODEL_PATH ="runs/detect/runs/train/yolo11n_640_train_hd/weights/best.pt"
+VIDEO_PATH = "/Users/grifftwu/ball/test2.mp4"
+OUTPUT_DIR = "./outputs/auto_clips_20260111"
 
 # ⏱️ [这里修改] 从第几分钟开始看？
-START_MIN = 5.0  
+START_MIN = 0
 
 # 🔍 阈值设置 (保持和你主程序一致)
 CONF_THRES_BALL = 0.15   
-CONF_THRES_RIM = 0.40    
+CONF_THRES_RIM = 0.10    
 
 # 📏 区域参数 (画出来给你看)
 HIGH_ZONE_OFFSET = 150   # 蓝线 (高空线)
@@ -44,13 +49,18 @@ def run_debug():
     print("------------------------------------------------")
 
     paused = False
+    frame_count = 0
+    rim_detected_frames = 0
+    ball_detected_frames = 0
     
     while True:
         if not paused:
             ret, frame = cap.read()
             if not ret: 
-                print("视频播放结束")
+                print("\n视频播放结束")
+                print(f"📊 检测统计: 总帧数={frame_count}, 篮筐检测帧={rim_detected_frames}, 篮球检测帧={ball_detected_frames}")
                 break
+            frame_count += 1
         else:
             # 暂停时重复显示当前帧(为了保持窗口响应)
             pass
@@ -61,7 +71,9 @@ def run_debug():
         # --- YOLO 推理 ---
         results = model.predict(debug_frame, conf=0.01, device=device, verbose=False, imgsz=1024)
         
-        rim_box = None 
+        rim_box = None
+        has_ball_this_frame = False
+        has_rim_this_frame = False
         
         if results[0].boxes is not None:
             boxes = results[0].boxes
@@ -76,6 +88,7 @@ def run_debug():
                 # 🏀 篮球
                 if cls_id == 0:
                     if conf > CONF_THRES_BALL:
+                        has_ball_this_frame = True
                         color = (0, 140, 255) # 橙色
                         label = f"Ball {conf:.2f}"
                         cv2.rectangle(debug_frame, (x1, y1), (x2, y2), color, 2)
@@ -88,9 +101,24 @@ def run_debug():
                 # 🥅 篮筐
                 elif cls_id == 1:
                     if conf > CONF_THRES_RIM:
+                        has_rim_this_frame = True
                         color = (0, 255, 0) # 绿色
                         cv2.rectangle(debug_frame, (x1, y1), (x2, y2), color, 2)
-                        if rim_box is None: rim_box = [x1, y1, x2, y2]
+                        if rim_box is None: 
+                            rim_box = [x1, y1, x2, y2]
+                            curr_time = cap.get(cv2.CAP_PROP_POS_FRAMES) / fps
+                            print(f"🥅 [帧{frame_count:05d}] {curr_time:.2f}s - 检测到篮筐! 置信度={conf:.3f}, 位置=[{x1},{y1},{x2},{y2}]")
+                    else:
+                        # 打印低置信度的篮筐
+                        if conf > 0.05:  # 只打印置信度>5%的
+                            curr_time = cap.get(cv2.CAP_PROP_POS_FRAMES) / fps
+                            print(f"⚠️  [帧{frame_count:05d}] {curr_time:.2f}s - 篮筐置信度过低: {conf:.3f} < {CONF_THRES_RIM}")
+        
+        # 统计检测成功的帧
+        if has_rim_this_frame:
+            rim_detected_frames += 1
+        if has_ball_this_frame:
+            ball_detected_frames += 1
         
         # --- 🎨 画区域 ---
         if rim_box is not None:
@@ -109,9 +137,11 @@ def run_debug():
         display_w = int(debug_frame.shape[1] * scale)
         small_frame = cv2.resize(debug_frame, (display_w, display_h))
         
-        # 叠加时间信息
+        # 叠加时间和统计信息
         curr_sec = cap.get(cv2.CAP_PROP_POS_FRAMES) / fps
         cv2.putText(small_frame, f"Time: {curr_sec/60:.2f} min", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+        cv2.putText(small_frame, f"Rim: {rim_detected_frames}/{frame_count}", (20, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+        cv2.putText(small_frame, f"Ball: {ball_detected_frames}/{frame_count}", (20, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 140, 255), 2)
         
         cv2.imshow('YOLO Inspector', small_frame)
         

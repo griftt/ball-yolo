@@ -10,7 +10,7 @@ import torch
 from ultralytics import YOLO
 
 # ---------------- 1. 路径配置 ----------------
-DATASET_DIR = "/Users/grifftwu/Desktop/历史篮球/1126/"
+DATASET_DIR = "/Users/grifftwu/Desktop/历史篮球/20260111/"
 TRAIN_IMAGES = os.path.join(DATASET_DIR, "images/train")
 VAL_IMAGES = os.path.join(DATASET_DIR, "images/val")
 DATA_YAML = os.path.join(DATASET_DIR, "basketball_hd_dataset.yaml")
@@ -59,14 +59,16 @@ with open(DATA_YAML, "w") as f:
 
 # ---------------- 4. 加载模型 ----------------
 # 建议先用 Medium 模型，Large 模型在 18GB 内存上加载高清图风险较大
-MODEL_NAME = "yolo11n.pt" 
+# MODEL_NAME = "runs/train/yolo11n_640_train/weights/best.pt" 
 # 这样模型不用从零学起，只需要“适应新环境”
 # MODEL_NAME = "./runs/train/yolov11n_hd_optimized/weights/best.pt" 
+
+MODEL_NAME = "yolo26s.pt"
 try:
     # 建议换成 Small 模型，性价比更高
     # 如果没下载，会自动下载
     print(f"Step 2/4: 正在加载预训练模型 {MODEL_NAME} (首次运行会自动下载)...")
-    model = YOLO(MODEL_NAME)
+    model = YOLO("yolo26s.pt")
     
     # 注册回调
     model.add_callback("on_train_start", on_train_start)
@@ -105,7 +107,7 @@ try:
         workers=4,         # 🚀 [提升] 尝试用4个线程加载数据。如果报错改成0。
         
         project="./runs/train",
-        name="yolo11n_640_train", # 名字改一下
+        name="yolo11n_640_train_hd", # 名字改一下
         exist_ok=True,
         patience=30,
         save_period=5,     # 每5轮保存一次

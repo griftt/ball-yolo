@@ -9,11 +9,11 @@ import subprocess
 INPUT_FOLDERS = [
     # "./outputs/auto_mps_clips_1126_rotated1",
     # "./outputs/auto_mps_clips_batch_01",  # 举例：第二个文件夹
-    "./outputs/auto_mps_clips_batch_final",  
+    "./outputs/auto_mps_clips_batch_640",  
 ]
 
 # 2. 💾 输出文件
-OUTPUT_FILE = "./outputs/222.mp4"
+OUTPUT_FILE = "./outputs/merge.mp4"
 
 # ====================================================
 

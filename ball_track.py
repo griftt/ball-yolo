@@ -15,7 +15,7 @@ from collections import deque
 # ==================== ⚙️ 核心配置区域 ====================
 
 # 1. ⏱️ 运行时间控制
-START_FROM_MINUTES = 55.1     
+START_FROM_MINUTES = 1.1     
 MAX_PROCESS_MINUTES = 1.0     # None = 跑完为止
 
 # 2. 🎯 自动校准参数
@@ -40,8 +40,8 @@ TRAJECTORY_ALPHA = 0.7         # 透明度 (越高越不透明)
 TRAJECTORY_THICKNESS_SCALE = 0.8 # 线条粗细倍率
 
 # 6. 🤖 模型与路径
-MODEL_PATH = "./runs/train/yolo11_finetune_new_court/weights/best.mlpackage"
-VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/1112/1112.mov"
+MODEL_PATH = "runs/train/yolo11mbest/best.mlpackage"
+VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/1122/check.mp4"
 OUTPUT_DIR = "./outputs/auto_mps_clips_1112_perfect_arc"
 
 # 7. 推理配置
