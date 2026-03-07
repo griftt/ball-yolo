@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-优化版 YOLOv11 训练脚本 (带详细日志版)
+优化版 YOLOv26s 训练脚本 (带详细日志版)
 硬件适配：Mac M3 Pro (18GB)
 """
 
@@ -59,16 +59,16 @@ with open(DATA_YAML, "w") as f:
 
 # ---------------- 4. 加载模型 ----------------
 # 建议先用 Medium 模型，Large 模型在 18GB 内存上加载高清图风险较大
-# MODEL_NAME = "runs/train/yolo11n_640_train/weights/best.pt" 
+
 # 这样模型不用从零学起，只需要“适应新环境”
-MODEL_NAME = "runs/detect/runs/train/yolo11n_640_train_hd/weights/best.pt" 
+MODEL_NAME = "runs/yolo26s/best.pt" 
 
 # MODEL_NAME = "yolo26s.pt"
 try:
     # 建议换成 Small 模型，性价比更高
     # 如果没下载，会自动下载
     print(f"Step 2/4: 正在加载预训练模型 {MODEL_NAME} (首次运行会自动下载)...")
-    model = YOLO("yolo26s.pt")
+    model = YOLO(MODEL_NAME)
     
     # 注册回调
     model.add_callback("on_train_start", on_train_start)

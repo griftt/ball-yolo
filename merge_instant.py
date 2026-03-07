@@ -9,11 +9,12 @@ import subprocess
 INPUT_FOLDERS = [
     # "./outputs/auto_mps_clips_1126_rotated1",
     # "./outputs/auto_mps_clips_batch_01",  # 举例：第二个文件夹
-    "./outputs/auto_mps_clips_batch_640",  
+    # "/Users/grifftwu/Documents/HighlightClips/444", 
+    "outputs" 
 ]
 
 # 2. 💾 输出文件
-OUTPUT_FILE = "./outputs/merge.mp4"
+OUTPUT_FILE = "./outputs/EEE.mp4"
 
 # ====================================================
 
@@ -35,6 +36,7 @@ def instant_merge_multi():
         if not os.path.exists(folder):
             print(f"⚠️ 跳过不存在的文件夹: {folder}")
             continue
+
 
         # 获取该文件夹下的 MP4
         files = [f for f in os.listdir(folder) if f.endswith(".mp4") and not f.startswith(".")]

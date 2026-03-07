@@ -16,16 +16,16 @@ import psutil
 
 # 1. 📂 视频任务列表
 VIDEO_TASKS = [
-    {"path": "/Users/grifftwu/Desktop/历史篮球/1126/111.mp4", "start": 25.25},
+    # {"path": "/Users/grifftwu/Desktop/历史篮球/1126/111.mp4", "start": 25.25},
     # {"path": "/Users/grifftwu/Desktop/历史篮球/1126/222.mp4", "start": 27.97},
     # {"path": "/Users/grifftwu/Desktop/历史篮球/1126/333.mp4", "start": 9.51},
     # {"path": "/Users/grifftwu/Desktop/历史篮球/1126/444.mp4", "start": 0.5},
-    # {"path": "/Users/grifftwu/ball/test2.mp4", "start": 0},
+    {"path": "/Users/grifftwu/Desktop/历史篮球/20260304/111.mp4", "start": 0},
 ]
 
 # 2. ⏱️ 全局配置
-MAX_PROCESS_MINUTES = 30     
-OUTPUT_DIR = "./outputs/auto_clips_20260115"
+MAX_PROCESS_MINUTES = 60     
+OUTPUT_DIR = "./outputs/auto_clips_20260304"
 
 # 3. ⚙️ 性能优化配置
 INFERENCE_SIZE = 640        
@@ -33,11 +33,11 @@ FRAME_SKIP = 3               # 每 3 帧检测一次
 ROTATE_VIDEO_180 = False     
 
 # 4. 🎯 动态检测参数
-CONF_THRES_RIM = 0.03        # 篮筐检测置信度
-CONF_THRES_BALL = 0.45       # 篮球检测置信度
+CONF_THRES_RIM = 0.4        # 篮筐检测置信度
+CONF_THRES_BALL = 0.4       # 篮球检测置信度
 HIGH_ZONE_OFFSET = 150       # 高位区范围（篮筐上方）
-GOAL_ZONE_OFFSET = 150       # 进球区范围（篮筐下方）
-SHOT_WINDOW = 2.5            # 投篮时间窗口（秒）
+GOAL_ZONE_OFFSET = 100       # 进球区范围（篮筐下方）
+SHOT_WINDOW = 1.2          # 投篮时间窗口（秒）
 CLS_BALL = 0
 CLS_RIM = 1
 
@@ -47,7 +47,8 @@ CLIP_POST_TIME = 2.0
 SHOT_COOLDOWN = 3.0          # 防止重复检测冷却时间
 
 # 6. 🤖 模型路径
-MODEL_PATH = "runs/detect/runs/train/yolo11n_640_train_hd/weights/best.pt"
+# MODEL_PATH = "runs/detect/runs/train/yolo26s_640_train_hd_person/weights/best.pt"
+MODEL_PATH = "runs/yolo26s/best.pt"
 
 # ==================== 🛡️ 散热保护配置 ====================
 ENABLE_HEAT_PROTECTION = False  

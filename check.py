@@ -6,12 +6,14 @@ from ultralytics import YOLO
 
 # ==================== ⚙️ 调试配置 (修改这里) ====================
 # VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/1122/check.mp4"
+VIDEO_PATH = "/Users/grifftwu/Desktop/历史篮球/20260304/111.MP4"
 # MODEL_PATH = "./runs/train/yolo11n_640_train/weights/best.pt"
 # MODEL_PATH = "runs/detect/runs/train/yolo11n_640_train_hd/weights/best.pt"
-# MODEL_PATH = "/Users/grifftwu/IdeaProjects/ball-yolo/runs/train/yolo11n_640_train_hd/weights/best.pt"
-MODEL_PATH ="runs/detect/runs/train/yolo11n_640_train_hd/weights/best.pt"
-VIDEO_PATH = "/Users/grifftwu/ball/test2.mp4"
-OUTPUT_DIR = "./outputs/auto_clips_20260111"
+# MODEL_PATH = "runs/detect/runs/train/yolo26s_640_train_hd_person/weights/best.pt"
+# MODEL_PATH = "runs/detect/runs/train/yolo26s_640_train_hd_person/weights/best.pt"
+MODEL_PATH ="runs/yolo26s/best.pt"
+# VIDEO_PATH = "/Users/grifftwu/ball/test1.mp4"
+OUTPUT_DIR = "./outputs/auto_clips_202600304check"
 
 # ⏱️ [这里修改] 从第几分钟开始看？
 START_MIN = 0
@@ -93,10 +95,14 @@ def run_debug():
                         label = f"Ball {conf:.2f}"
                         cv2.rectangle(debug_frame, (x1, y1), (x2, y2), color, 2)
                         cv2.putText(debug_frame, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+                        curr_time = cap.get(cv2.CAP_PROP_POS_FRAMES) / fps
+                        print(f"🥅 [帧{frame_count:05d}] {curr_time:.2f}s - 检测到篮球! 置信度={conf:.3f}, 位置=[{x1},{y1},{x2},{y2}]")
                     else:
                         color = (200, 200, 200) # 灰色(被过滤)
                         cv2.rectangle(debug_frame, (x1, y1), (x2, y2), color, 1)
                         cv2.putText(debug_frame, f"{conf:.2f}", (x1, y1-5), cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
+                        curr_time = cap.get(cv2.CAP_PROP_POS_FRAMES) / fps
+                        print(f"🥅 [帧{frame_count:05d}] {curr_time:.2f}s - 篮球置信度过低! 置信度={conf:.3f}, 位置=[{x1},{y1},{x2},{y2}]")
                         
                 # 🥅 篮筐
                 elif cls_id == 1:
