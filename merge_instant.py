@@ -9,12 +9,15 @@ import subprocess
 INPUT_FOLDERS = [
     # "./outputs/auto_mps_clips_1126_rotated1",
     # "./outputs/auto_mps_clips_batch_01",  # 举例：第二个文件夹
-    # "/Users/grifftwu/Documents/HighlightClips/444", 
-    "outputs" 
+     "/Users/grifftwu/Documents/HighlightClips/04", 
+     "/Users/grifftwu/Documents/HighlightClips/03", 
+     "/Users/grifftwu/Documents/HighlightClips/02", 
+     "/Users/grifftwu/Documents/HighlightClips/01", 
+    # "outputs" 
 ]
 
 # 2. 💾 输出文件
-OUTPUT_FILE = "./outputs/EEE.mp4"
+OUTPUT_FILE = "./runs/output/0325.mp4"
 
 # ====================================================
 
